@@ -1,0 +1,38 @@
+{
+  "name": "s3-cinema-search",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "ingest": "tsx scripts/ingest.ts",
+    "demo:catalog": "tsx scripts/build-demo-catalog.ts",
+    "prepare:static": "tsx scripts/prepare-static-site.ts",
+    "recover:posters": "tsx scripts/recover-poster-paths.ts",
+    "migrate:vercel": "tsx scripts/migrate-through-vercel.ts",
+    "upload:s3": "tsx scripts/upload-static-assets.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.910.0",
+    "@aws-sdk/credential-provider-web-identity": "^3.972.78",
+    "@aws-sdk/s3-request-presigner": "^3.910.0",
+    "@vercel/oidc": "^3.2.0",
+    "csv-parse": "^7.0.3",
+    "dotenv": "^17.2.3",
+    "next": "^16.3.7",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "vercel": "^63.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.10",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "eslint": "^9.38.0",
+    "eslint-config-next": "^16.3.7",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

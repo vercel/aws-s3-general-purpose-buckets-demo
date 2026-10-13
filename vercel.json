@@ -1,0 +1,4 @@
+{
+  "buildCommand": "pnpm prepare:static && pnpm upload:s3 && pnpm build",
+  "regions": ["pdx1"]
+}

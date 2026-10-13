@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+.env
+.env.local
+data/*.csv
+data/*.zip
+data/poster-url-cache.json
+public/catalog
+public/posters
+npm-debug.log*
+*.tsbuildinfo
+.DS_Store
+.vercel
+.env*
