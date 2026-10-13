@@ -5,15 +5,23 @@ metadata and poster images. It securely connects to S3 without hardcoded access
 tokens through Vercel's
 [OIDC Federation](https://vercel.com/docs/security/secure-backend-access/oidc).
 
-[![This is an alt text.](/public/Vercel-AWS-GitHub-apg.png)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Faws-s3-general-purpose-buckets-demo&project-name=aws-s3-general-purpose-buckets-demo&repository-name=aws-s3-general-purpose-buckets-demo&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22aws%22%2C%22productSlug%22%3A%22aws-s3%22%2C%22protocol%22%3A%22storage%22%7D%5D)
+[![This is an alt text.](/public/Vercel-AWS-GitHub-s3.png)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Faws-s3-general-purpose-buckets-demo&project-name=aws-s3-general-purpose-buckets-demo&repository-name=aws-s3-general-purpose-buckets-demo&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22aws%22%2C%22productSlug%22%3A%22aws-s3%22%2C%22protocol%22%3A%22storage%22%7D%5D)
 
 **Demo:** [View Demo](https://s3-vercel-general-purpose-buckets.vercel.app/)
 
 ## Getting Started
 
-Connect an Amazon S3 general purpose bucket to the project through the Vercel
-AWS Native Integration. The integration provisions an IAM role and adds the
-required S3 environment variables to the Vercel project.
+Click the "Deploy" button to clone this repo, create a new Vercel project, set up
+the AWS integration, and provision a new S3 general purpose bucket:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Faws-s3-general-purpose-buckets-demo&project-name=aws-s3-general-purpose-buckets-demo&repository-name=aws-s3-general-purpose-buckets-demo&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22aws%22%2C%22productSlug%22%3A%22aws-s3%22%2C%22protocol%22%3A%22storage%22%7D%5D)
+
+Every deployment prepares the catalog and posters and uploads them to the bucket
+before building, so the first deployment fills the bucket on its own.
+
+To connect a bucket to an existing project instead, use the Vercel AWS Native
+Integration. It provisions an IAM role and adds the required S3 environment
+variables to the Vercel project.
 
 Prepare the movie catalog and posters locally, then run `npm run upload:s3`.
 The command uploads the files directly to the private S3 bucket using Vercel
@@ -39,6 +47,12 @@ see the [S3 and Vercel setup guide](docs/setup-guide.md).
    npx vercel link
    npx vercel env pull .env.local
    ```
+
+   `vercel env pull` reads the project's **Development** environment. The Deploy
+   button connects the bucket to every environment, but connecting it from the
+   dashboard leaves Development unchecked by default. If `.env.local` has no
+   `S3_BUCKET_NAME`, edit the bucket's project connection, enable Development,
+   and pull again.
 
 2. Install dependencies:
 

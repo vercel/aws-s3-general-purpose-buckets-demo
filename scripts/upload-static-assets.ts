@@ -27,6 +27,8 @@ async function mapWithConcurrency<T>(
 
 async function main() {
   config({ path: ".env.local", quiet: true });
+  // `vercel pull` writes here instead of .env.local.
+  config({ path: ".vercel/.env.development.local", quiet: true });
   const { requireBucketName, s3 } = await import("../lib/s3");
   const bucket = requireBucketName();
 
