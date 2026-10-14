@@ -7,7 +7,7 @@ tokens through Vercel's
 
 [![This is an alt text.](/public/Vercel-AWS-GitHub-s3.png)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Faws-s3-general-purpose-buckets-demo&project-name=aws-s3-general-purpose-buckets-demo&repository-name=aws-s3-general-purpose-buckets-demo&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22aws%22%2C%22productSlug%22%3A%22aws-s3%22%2C%22protocol%22%3A%22storage%22%7D%5D)
 
-**Demo:** [View Demo](https://s3-vercel-general-purpose-buckets.vercel.app/)
+**Demo:** [View Demo](https://aws-s3-general-purpose-buckets.vercel.app/)
 
 ## Getting Started
 
