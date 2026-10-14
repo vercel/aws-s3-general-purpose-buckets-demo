@@ -55,42 +55,32 @@ npx vercel env pull .env.local
 
 Confirm that `.vercel` and `.env*` are ignored by Git before committing code.
 
-## 4. Prepare the catalog and posters
+## 4. Upload the catalog and posters
 
-Create the local files that will be uploaded:
-
-```bash
-npm run prepare:static
-```
-
-This reads `lib/demo-catalog.json`, downloads any missing poster images, skips
-movies without an available poster, and writes:
-
-```text
-public/catalog/movies.json
-public/posters/{tmdb-id}.jpg
-```
-
-## 5. Upload directly to S3
-
-Upload the prepared files to the bucket connected to the Vercel project:
+Every deployment runs this step before building, so if you deploy first you can
+skip it. To fill the bucket from your machine:
 
 ```bash
-npm run upload:s3
+npm run sync:s3
 ```
 
-The uploader reads the integration settings and OIDC token from `.env.local`.
-It assumes the provisioned IAM role and writes the catalog and posters directly
-to the private bucket. It does not create public objects or require static AWS
-access keys.
+The sync reads the integration settings and OIDC token from `.env.local`,
+assumes the provisioned IAM role, and writes directly to the private bucket. It
+does not create public objects or require static AWS access keys.
 
-A complete upload shows:
+It reads `lib/demo-catalog.json`, checks each poster in the bucket, downloads
+only the missing ones from TMDB, and skips movies without an available poster.
+It writes `catalog/movies.json` last, so once the catalog exists later runs and
+deployments return immediately. Run `npm run sync:s3 -- --force` to rebuild the
+catalog; posters already in the bucket are still skipped.
+
+A complete first sync ends with:
 
 ```text
-Uploaded 4395 posters and catalog/movies.json.
+[sync:s3] Uploaded 4395 new posters. catalog/movies.json lists 4395 movies; 259 had no poster available.
 ```
 
-## 6. Deploy the application
+## 5. Deploy the application
 
 ```bash
 npx vercel --prod
@@ -99,7 +89,7 @@ npx vercel --prod
 When the command finishes, open the production URL. A protected deployment may
 ask you to sign in to Vercel.
 
-## 7. Verify the catalog and a poster
+## 6. Verify the catalog and a poster
 
 Use the Vercel CLI to make authenticated requests through deployment
 protection:
@@ -134,7 +124,7 @@ curl -I \
 
 The expected response is `403 Forbidden`.
 
-## 8. Try the demo
+## 7. Try the demo
 
 Search by movie title, release year, director, cast member, or genre. Multiple
 search terms must all match. Results can be sorted by popularity, rating,
@@ -171,5 +161,8 @@ npx vercel logs \
   environment, then redeploy.
 - `AccessDenied` for an object means the integration role cannot read or write
   that S3 key.
-- A failed upload should be retried after confirming that `.env.local` contains
-  the integration variables and a current `VERCEL_OIDC_TOKEN`.
+- `/api/catalog` returning 503 means the catalog has not been uploaded yet.
+  Redeploy, or run `npm run sync:s3`.
+- A failed sync should be retried after confirming that `.env.local` contains
+  the integration variables and a current `VERCEL_OIDC_TOKEN`. It resumes where
+  it stopped.

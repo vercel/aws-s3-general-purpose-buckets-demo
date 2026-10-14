@@ -16,16 +16,17 @@ the AWS integration, and provision a new S3 general purpose bucket:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Faws-s3-general-purpose-buckets-demo&project-name=aws-s3-general-purpose-buckets-demo&repository-name=aws-s3-general-purpose-buckets-demo&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22aws%22%2C%22productSlug%22%3A%22aws-s3%22%2C%22protocol%22%3A%22storage%22%7D%5D)
 
-Every deployment prepares the catalog and posters and uploads them to the bucket
-before building, so the first deployment fills the bucket on its own.
+The first deployment fills the bucket on its own: before building, it downloads
+the posters and uploads them with the catalog. Later deployments find the
+catalog already in the bucket and skip straight to the build.
 
 To connect a bucket to an existing project instead, use the Vercel AWS Native
 Integration. It provisions an IAM role and adds the required S3 environment
 variables to the Vercel project.
 
-Prepare the movie catalog and posters locally, then run `npm run upload:s3`.
-The command uploads the files directly to the private S3 bucket using Vercel
-OIDC credentials. The catalog contains 4,395 poster-backed movies from the
+To fill the bucket from your machine instead, run `npm run sync:s3`. It uploads
+straight to the private bucket using Vercel OIDC credentials, skipping posters
+that are already there. The catalog contains 4,395 poster-backed movies from the
 [TMDB 5000 Movie Dataset](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata);
 movies without a confirmed poster are omitted.
 
@@ -60,25 +61,20 @@ see the [S3 and Vercel setup guide](docs/setup-guide.md).
    npm install
    ```
 
-3. Prepare the catalog and poster files:
+3. Upload the catalog and posters to the connected S3 bucket, if a deployment
+   has not already done it:
 
    ```bash
-   npm run prepare:static
+   npm run sync:s3
    ```
 
-4. Upload the files directly to the connected S3 bucket:
-
-   ```bash
-   npm run upload:s3
-   ```
-
-5. Start the development server:
+4. Start the development server:
 
    ```bash
    npm run dev
    ```
 
-6. View local development at [http://localhost:3000](http://localhost:3000).
+5. View local development at [http://localhost:3000](http://localhost:3000).
 
 The S3 bucket remains private. Vercel exchanges its OIDC token for temporary
 AWS credentials, and poster responses are cached on Vercel's CDN.

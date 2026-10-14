@@ -1,6 +1,6 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import type { Movie } from "@/lib/types";
-import { requireBucketName, s3 } from "@/lib/s3";
+import { isMissingObject, requireBucketName, s3 } from "@/lib/s3";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,6 +35,16 @@ export async function GET() {
       }
     });
   } catch (error) {
+    if (isMissingObject(error)) {
+      return Response.json(
+        {
+          error:
+            "The movie catalog is not in the S3 bucket yet. Redeploy, or run " +
+            "`npm run sync:s3`, to upload it."
+        },
+        { status: 503 }
+      );
+    }
     console.error("Could not load the S3 movie catalog.", error);
     return Response.json(
       { error: "Could not load the movie catalog from S3." },
