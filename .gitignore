@@ -6,8 +6,6 @@ out
 data/*.csv
 data/*.zip
 data/poster-url-cache.json
-public/catalog
-public/posters
 npm-debug.log*
 *.tsbuildinfo
 .DS_Store

@@ -6,10 +6,6 @@ const region = process.env.AWS_REGION ?? "us-east-1";
 const roleArn = process.env.AWS_ROLE_ARN;
 
 export const bucketName = process.env.S3_BUCKET_NAME;
-export const legacyAssetBaseUrl = (
-  process.env.LEGACY_ASSET_BASE_URL ??
-  "https://d1edv93n89rnpj.cloudfront.net"
-).replace(/\/$/, "");
 
 async function getVercelCredentials() {
   if (!roleArn) {

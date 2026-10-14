@@ -1,10 +1,5 @@
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import {
-  isMissingObject,
-  legacyAssetBaseUrl,
-  requireBucketName,
-  s3
-} from "@/lib/s3";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { isMissingObject, requireBucketName, s3 } from "@/lib/s3";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -33,26 +28,8 @@ async function loadPoster(id: string) {
       lastModified: response.LastModified
     };
   } catch (error) {
-    if (!isMissingObject(error)) throw error;
-
-    const source = await fetch(`${legacyAssetBaseUrl}/${key}`);
-    if (!source.ok) {
-      if (source.status === 404) return null;
-      throw new Error(`Legacy poster request failed: ${source.status}`);
-    }
-    const bytes = new Uint8Array(await source.arrayBuffer());
-    const contentType = source.headers.get("content-type") ?? "image/jpeg";
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: bucket,
-        Key: key,
-        Body: bytes,
-        ContentType: contentType,
-        CacheControl: "public, max-age=31536000, immutable",
-        Metadata: { tmdb_id: id }
-      })
-    );
-    return { bytes, contentType };
+    if (isMissingObject(error)) return null;
+    throw error;
   }
 }
 
