@@ -42,7 +42,12 @@ export async function GET(_request: Request, context: Context) {
   try {
     const poster = await loadPoster(id);
     if (!poster) {
-      return new Response("Poster not found.", { status: 404 });
+      // Cache misses on the CDN so repeated requests for an ID that has no
+      // poster don't each reach S3.
+      return new Response("Poster not found.", {
+        status: 404,
+        headers: { "Cache-Control": "public, max-age=0, s-maxage=3600" }
+      });
     }
 
     const headers = new Headers({
